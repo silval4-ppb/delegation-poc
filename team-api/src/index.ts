@@ -5,6 +5,7 @@ import { UrlLoader } from "@graphql-tools/url-loader";
 import { OperationTypeNode, print } from "graphql";
 import { stitchSchemas } from "@graphql-tools/stitch";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
+import { RenameTypes } from "@graphql-tools/wrap";
 
 async function main() {
   const teams = [
@@ -58,7 +59,10 @@ async function main() {
 
   // setup subschema configurations
   const teamsSubschema = { schema: teamsSchema };
-  const membersSubschema = { schema: membersSchema };
+  const membersSubschema = {
+    schema: membersSchema,
+    transforms: [new RenameTypes((name) => `MemberAPI_${name}`)],
+  };
 
   // build the combined schema
   const gatewaySchema = stitchSchemas({

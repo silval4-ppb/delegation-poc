@@ -11,3 +11,20 @@ type Team {
 type Query {
   teams: [Team!]!
 }
+
+query GetTeams {
+  teams {
+    name
+    members {
+      name
+      id
+    }
+  }
+}
+
+query getTeamMembers {
+  membersByTeam(teamId: 1) {
+    id
+    name
+  }
+}

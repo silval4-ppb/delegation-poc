@@ -1,0 +1,13 @@
+type Member {
+  id: ID!
+}
+
+type Team {
+  id: ID!
+  name: String!
+  members: [Member!]!
+}
+
+type Query {
+  teams: [Team!]!
+}

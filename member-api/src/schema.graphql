@@ -1,0 +1,9 @@
+type Member {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  memberById(id: ID!): Member
+  membersByTeam(teamId: ID!): [Member]
+}

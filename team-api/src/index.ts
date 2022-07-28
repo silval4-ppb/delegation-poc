@@ -3,8 +3,8 @@ import { delegateToSchema } from "@graphql-tools/delegate";
 import { loadSchema } from "@graphql-tools/load";
 import { UrlLoader } from "@graphql-tools/url-loader";
 import { OperationTypeNode, print } from "graphql";
-import { makeExecutableSchema } from "@graphql-tools/schema";
 import { stitchSchemas } from "@graphql-tools/stitch";
+import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
 
 async function main() {
   const teams = [
@@ -18,22 +18,8 @@ async function main() {
     },
   ];
 
-  const teamsSchema = makeExecutableSchema({
-    typeDefs: /* GraphQL */ `
-      type Member {
-        id: ID!
-      }
-
-      type Team {
-        id: ID!
-        name: String!
-        members: [Member!]!
-      }
-
-      type Query {
-        teams: [Team!]!
-      }
-    `,
+  const teamsSchema = await loadSchema("./src/schema.graphql", {
+    loaders: [new GraphQLFileLoader()],
   });
 
   const membersSchema = await loadSchema("http://localhost:4001/graphql", {

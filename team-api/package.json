@@ -25,6 +25,7 @@
         "nodemon": "^2.0.16"
     },
     "devDependencies": {
+        "@graphql-tools/stitch": "^8.7.0",
         "graphql-cli": "^4.1.0",
         "npm-run-all": "^4.1.5",
         "ts-node": "^10.8.1",

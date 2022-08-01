@@ -2,10 +2,20 @@ type Member {
   id: ID!
 }
 
+type Football {
+  id: ID!
+}
+
+type FootballCompetition {
+  id: ID!
+}
+
 type Team {
   id: ID!
   name: String!
   members: [Member!]!
+  football: Football
+  footballCompetition(ids: [ID!]!): FootballCompetition
 }
 
 type Query {

@@ -5,7 +5,8 @@ import { UrlLoader } from "@graphql-tools/url-loader";
 import { OperationTypeNode, print } from "graphql";
 import { stitchSchemas } from "@graphql-tools/stitch";
 import { GraphQLFileLoader } from "@graphql-tools/graphql-file-loader";
-import { RenameTypes } from "@graphql-tools/wrap";
+import { NestedDelegationTransform } from "./NestedDelegationTransform";
+// import { RenameTypes } from "@graphql-tools/wrap";
 
 async function main() {
   const teams = [
@@ -24,6 +25,10 @@ async function main() {
   });
 
   const membersSchema = await loadSchema("http://localhost:4001/graphql", {
+    loaders: [new UrlLoader()],
+  });
+
+  const scaSchema = await loadSchema("http://scapp.nxt.internal/graphql", {
     loaders: [new UrlLoader()],
   });
 
@@ -54,19 +59,48 @@ async function main() {
           info,
         });
       },
+      football: (_, args, context, info) => {
+        return delegateToSchema({
+          schema: scaSchema,
+          operation: OperationTypeNode.QUERY,
+          fieldName: "football",
+          context,
+          info,
+        });
+      },
+      footballCompetition: (parent, args, context, info) => {
+        return delegateToSchema({
+          schema: scaSchema,
+          operation: OperationTypeNode.QUERY,
+          fieldName: "football.competition",
+          args: {
+            ids: args.ids,
+          },
+          transforms: [new NestedDelegationTransform()],
+          context,
+          info,
+        });
+      },
     },
   };
 
   // setup subschema configurations
-  const teamsSubschema = { schema: teamsSchema };
+  const teamsSubschema = {
+    schema: teamsSchema,
+  };
+
   const membersSubschema = {
     schema: membersSchema,
-    transforms: [new RenameTypes((name) => `MemberAPI_${name}`)],
+    // transforms: [new RenameTypes((name) => `MemberAPI_${name}`)],
+  };
+
+  const footballSubschema = {
+    schema: scaSchema,
   };
 
   // build the combined schema
   const gatewaySchema = stitchSchemas({
-    subschemas: [teamsSubschema, membersSubschema],
+    subschemas: [teamsSubschema, membersSubschema, footballSubschema],
   });
 
   // The ApolloServer constructor requires two parameters: your schema

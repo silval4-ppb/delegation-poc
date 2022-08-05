@@ -15,7 +15,7 @@ type Team {
   name: String!
   members: [Member!]!
   football: Football
-  footballCompetition(ids: [ID!]!): FootballCompetition
+  footballCompetition: FootballCompetition
 }
 
 type Query {

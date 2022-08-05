@@ -39,6 +39,24 @@ class NestedDelegationTransform implements Transform {
 
           const child: FieldNode = {
             ...node,
+            arguments: [
+              {
+                kind: Kind.ARGUMENT,
+                name: {
+                  kind: Kind.NAME,
+                  value: "ids",
+                },
+                value: {
+                  kind: Kind.LIST,
+                  values: [
+                    {
+                      kind: Kind.STRING,
+                      value: "509933",
+                    },
+                  ],
+                },
+              },
+            ],
             name: { ...node.name, value: rest },
           };
           const parent: FieldNode = {
@@ -68,6 +86,11 @@ class NestedDelegationTransform implements Transform {
     }
 
     const path = delegation.fieldName.split(".");
+
+    // Skip when not nested field name.
+    if (path.length === 1) {
+      return result;
+    }
 
     const value = path.reduce((curr, name) => {
       const nested = curr[name];

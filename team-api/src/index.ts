@@ -73,9 +73,9 @@ async function main() {
           schema: scaSchema,
           operation: OperationTypeNode.QUERY,
           fieldName: "football.competition",
-          args: {
-            ids: args.ids,
-          },
+          // args: {
+          //   ids: args.ids,
+          // },
           transforms: [new NestedDelegationTransform()],
           context,
           info,

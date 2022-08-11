@@ -34,6 +34,16 @@ async function main() {
 
   const teamsResolvers = {
     Query: {
+      nestedMembers: (parent, args, context, info) => {
+        return delegateToSchema({
+          schema: membersSchema,
+          operation: OperationTypeNode.QUERY,
+          fieldName: "nested.members",
+          transforms: [new NestedDelegationTransform()],
+          context,
+          info,
+        });
+      },
       teams: () => {
         return teams.map((team) => {
           return { id: team.id };

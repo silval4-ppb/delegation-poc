@@ -19,6 +19,7 @@ type Team {
 }
 
 type Query {
+  nestedMembers: [Member]
   teams: [Team!]!
 }
 

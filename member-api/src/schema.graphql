@@ -3,7 +3,13 @@ type Member {
   name: String!
 }
 
+type Nested {
+  id: ID!
+  members: [Member]
+}
+
 type Query {
+  nested: Nested
   memberById(id: ID!): Member
   membersByTeam(teamId: ID!): [Member]
 }

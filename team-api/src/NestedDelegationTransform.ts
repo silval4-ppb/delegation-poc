@@ -98,9 +98,6 @@ class NestedDelegationTransform implements Transform {
       // No result, stop traversing.
       if (typeof nested === "undefined" || nested === null) return null;
 
-      // If is an array, simply get first element (how to handle this?)
-      if (Array.isArray(nested)) return nested[0];
-
       return nested;
     }, result.data);
 

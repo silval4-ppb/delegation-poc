@@ -26,6 +26,11 @@ async function main() {
     },
   ];
 
+  const nested = {
+    id: 1,
+    members,
+  };
+
   const schema = await loadSchema("./src/schema.graphql", {
     loaders: [new GraphQLFileLoader()],
   });
@@ -39,7 +44,18 @@ async function main() {
         return members.find((member) => member.id === id).name;
       },
     },
+    Nested: {
+      id: ({ id }, args, context, info) => {
+        return id;
+      },
+      members: (_, { id }) => {
+        return nested.members;
+      },
+    },
     Query: {
+      nested: (_, { id }) => {
+        return nested;
+      },
       memberById: (_, { id }) => {
         return members.find((member) => member.id === id);
       },
